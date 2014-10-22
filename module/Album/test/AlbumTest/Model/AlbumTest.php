@@ -5,7 +5,7 @@ namespace AlbumTest\Model;
 use Album\Model\Album;
 use PHPUnit_Framework_TestCase;
 
-class AlbumTest extends \PHPUnit_Framework_TestCase
+class AlbumTest extends PHPUnit_Framework_TestCase
 {
     public function testAlbumInitialState()
     {
