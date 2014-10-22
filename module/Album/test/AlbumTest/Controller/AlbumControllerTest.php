@@ -35,4 +35,46 @@ class AlbumControllerTest extends AbstractHttpControllerTestCase
         $this->assertControllerClass('AlbumController');
         $this->assertMatchedRouteName('album');
     }
+    
+    public function testAddActionRedirectsAfterValidPost()
+    {
+        $albumTableMock = $this->getMockBuilder('Album\Model\AlbumTable')
+                               ->disableOriginalConstructor()
+                               ->getMock();
+        
+        $albumTableMock->expects($this->once())
+                       ->method('saveAlbum')
+                       ->will($this->returnValue(null));
+        
+        $serviceManager = $this->getApplicationServiceLocator();
+        $serviceManager->setAllowOverride(true);
+        $serviceManager->setService('Album\Model\AlbumTable', $albumTableMock);
+        
+        $postData = array(
+            'id' => '',
+        	'title'  => 'Led Zeppelin III',
+            'artist' => 'Led Zeppelin',
+        );
+        $this->dispatch('/album/add', 'POST', $postData);
+        $this->assertResponseStatusCode(302);
+        $this->assertRedirectTo('/album/');
+    }
+    
+    public function testEditActionCanBeAccessed()
+    {
+    	$albumTableMock = $this->getMockBuilder('Album\Model\AlbumTable')
+                               ->disableOriginalConstructor()
+                               ->getMock();
+    
+    	$albumTableMock->expects($this->once())
+        	           ->method('getAlbum')
+        	           ->will($this->returnValue(new \Album\Model\Album()));
+    
+    	$serviceManager = $this->getApplicationServiceLocator();
+    	$serviceManager->setAllowOverride(true);
+    	$serviceManager->setService('Album\Model\AlbumTable', $albumTableMock);
+    
+    	$this->dispatch('/album/edit/115397', 'GET');
+    	$this->assertResponseStatusCode(200);
+    }
 }
