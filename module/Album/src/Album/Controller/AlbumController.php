@@ -12,8 +12,11 @@ class AlbumController extends AbstractActionController
 	
 	public function indexAction()
 	{
+	    $paginator = $this->getAlbumTable()->fetchAll(true);
+	    $paginator->setCurrentPageNumber((int) $this->params()->fromQuery('page', 1));
+	    $paginator->setItemCountPerPage(10);
 		return new ViewModel(array(
-			'albums' => $this->getAlbumTable()->fetchAll()
+		    'paginator' => $paginator
 		));
 	}
 	
